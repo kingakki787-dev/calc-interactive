@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Critical Points & First Derivative Test</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-chtml.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Georgia', serif; background: #0a0a0f; color: #e8e4d9; min-height: 100vh; }
+
+  .page { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+  .hero { text-align: center; padding: 2.5rem 0 2rem; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 2.5rem; }
+  .hero-tag { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #7c6f5e; font-family: 'Georgia', serif; margin-bottom: 0.75rem; }
+  .hero h1 { font-size: 2.4rem; font-weight: 400; color: #f0ebe0; letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 0.5rem; }
+  .hero-sub { font-size: 0.95rem; color: #8a7f6e; font-style: italic; }
+  .objective { display: inline-block; margin-top: 1.25rem; background: rgba(255,210,100,0.08); border: 1px solid rgba(255,210,100,0.2); border-radius: 6px; padding: 0.6rem 1.2rem; font-size: 0.85rem; color: #d4b96a; }
+
+  .section { margin-bottom: 3rem; }
+  .section-title { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: #7c6f5e; margin-bottom: 1.25rem; padding-bottom: 0.5rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
+
+  .prose { font-size: 1rem; line-height: 1.85; color: #c8bfaf; }
+  .prose + .prose { margin-top: 1rem; }
+
+  .def-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-left: 3px solid #d4b96a; border-radius: 0 6px 6px 0; padding: 1.25rem 1.5rem; margin: 1.5rem 0; }
+  .def-box .def-label { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: #d4b96a; margin-bottom: 0.5rem; }
+  .def-box p { color: #c8bfaf; font-size: 0.95rem; line-height: 1.7; }
+
+  .theorem-box { background: rgba(100,180,255,0.04); border: 1px solid rgba(100,180,255,0.12); border-left: 3px solid #4da8e8; border-radius: 0 6px 6px 0; padding: 1.25rem 1.5rem; margin: 1.5rem 0; }
+  .theorem-box .def-label { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: #4da8e8; margin-bottom: 0.5rem; }
+  .theorem-box p { color: #c8bfaf; font-size: 0.95rem; line-height: 1.7; }
+  .theorem-box ul { color: #c8bfaf; font-size: 0.95rem; line-height: 1.9; padding-left: 1.2rem; margin-top: 0.4rem; }
+
+  canvas { display: block; width: 100%; border-radius: 8px; }
+  .canvas-wrap { background: #12121a; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 1rem; margin: 1.5rem 0; }
+
+  .slider-row { display: flex; align-items: center; gap: 12px; margin: 0.75rem 0; }
+  .slider-row label { font-size: 0.82rem; color: #8a7f6e; min-width: 90px; }
+  .slider-row input[type=range] { flex: 1; accent-color: #d4b96a; }
+  .slider-val { font-size: 0.88rem; font-weight: 600; color: #d4b96a; min-width: 32px; text-align: right; font-family: monospace; }
+
+  .sign-chart { display: flex; align-items: stretch; border-radius: 8px; overflow: hidden; border: 1px solid rgba(255,255,255,0.08); margin: 1.5rem 0; }
+  .sign-col { flex: 1; text-align: center; padding: 0.6rem 0.4rem; font-size: 0.82rem; }
+  .sign-col.header { background: rgba(255,255,255,0.04); color: #8a7f6e; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; }
+  .sign-col.pos { background: rgba(80,200,120,0.1); color: #6ecf8a; font-size: 1.1rem; }
+  .sign-col.neg { background: rgba(220,80,80,0.1); color: #e07070; font-size: 1.1rem; }
+  .sign-col.zero { background: rgba(212,185,106,0.1); color: #d4b96a; font-weight: 600; }
+  .sign-col.inc { background: rgba(80,200,120,0.06); color: #6ecf8a; font-size: 0.8rem; }
+  .sign-col.dec { background: rgba(220,80,80,0.06); color: #e07070; font-size: 0.8rem; }
+
+  .worked { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 1.5rem; margin: 1.5rem 0; }
+  .worked-title { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: #7c6f5e; margin-bottom: 1rem; }
+  .step { display: flex; gap: 1rem; margin: 0.75rem 0; align-items: flex-start; }
+  .step-num { min-width: 24px; height: 24px; background: rgba(212,185,106,0.15); border: 1px solid rgba(212,185,106,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; color: #d4b96a; margin-top: 2px; flex-shrink: 0; }
+  .step-body { font-size: 0.92rem; color: #c8bfaf; line-height: 1.7; }
+  .step-body .math-line { margin: 0.3rem 0; }
+
+  .btn-reveal { background: transparent; border: 1px solid rgba(212,185,106,0.3); color: #d4b96a; padding: 0.45rem 1rem; border-radius: 6px; font-size: 0.8rem; cursor: pointer; letter-spacing: 0.05em; margin-top: 0.75rem; transition: background 0.2s; }
+  .btn-reveal:hover { background: rgba(212,185,106,0.1); }
+
+  .quiz-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 1.5rem; margin: 1rem 0; }
+  .quiz-q { font-size: 0.95rem; color: #e0d8c8; line-height: 1.65; margin-bottom: 1rem; }
+  .quiz-input-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .quiz-input { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: 6px; padding: 0.45rem 0.75rem; color: #e8e4d9; font-size: 0.9rem; width: 140px; font-family: monospace; outline: none; }
+  .quiz-input:focus { border-color: rgba(212,185,106,0.5); }
+  .quiz-btn { background: transparent; border: 1px solid rgba(212,185,106,0.35); color: #d4b96a; padding: 0.45rem 1rem; border-radius: 6px; font-size: 0.82rem; cursor: pointer; transition: background 0.2s; white-space: nowrap; }
+  .quiz-btn:hover { background: rgba(212,185,106,0.1); }
+  .quiz-fb { margin-top: 0.75rem; font-size: 0.88rem; line-height: 1.6; display: none; }
+  .quiz-fb.correct { color: #6ecf8a; display: block; }
+  .quiz-fb.wrong { color: #e07070; display: block; }
+
+  .mc-opts { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.75rem; }
+  .mc-opt { display: flex; align-items: center; gap: 10px; cursor: pointer; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; padding: 0.55rem 0.9rem; transition: border-color 0.2s; }
+  .mc-opt:hover { border-color: rgba(212,185,106,0.3); }
+  .mc-opt input { accent-color: #d4b96a; }
+  .mc-opt span { font-size: 0.9rem; color: #c8bfaf; }
+
+  .score-bar { margin-top: 2rem; padding: 1rem 1.5rem; background: rgba(255,255,255,0.03); border-radius: 8px; font-size: 0.88rem; color: #8a7f6e; text-align: center; }
+  .score-val { font-size: 1.4rem; font-weight: 600; color: #d4b96a; display: block; margin-top: 0.25rem; }
+
+  .name-line { text-align: center; font-size: 0.8rem; color: #5a5040; margin-top: 3rem; letter-spacing: 0.05em; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="hero">
+    <div class="hero-tag">AP Calculus AB · Interactive Web App</div>
+    <h1>Critical Points &amp; the First Derivative Test</h1>
+    <div class="hero-sub">Teaching calculus, one derivative at a time</div>
+    <div class="objective">After using this, you should be able to find all critical points of a function and classify each as a local maximum, local minimum, or neither using the First Derivative Test.</div>
+  </div>
+
+  <!-- CONCEPT -->
+  <div class="section">
+    <div class="section-title">01 — Core Concepts</div>
+    <p class="prose">A <strong style="color:#e0d8c8">critical point</strong> of a function \(f\) is an \(x\)-value in the domain of \(f\) where something special happens to the derivative — it either equals zero, or it fails to exist. These are the candidates for local extrema.</p>
+
+    <div class="def-box">
+      <div class="def-label">Definition — Critical Point</div>
+      <p>A number \(c\) is a <em>critical point</em> of \(f\) if \(c\) is in the domain of \(f\) and either<br>
+      \[f'(c) = 0 \qquad \text{or} \qquad f'(c) \text{ does not exist.}\]</p>
+    </div>
+
+    <p class="prose">Finding a critical point tells you <em>where</em> an extremum might be. The First Derivative Test tells you <em>what kind</em> — or whether it's an extremum at all.</p>
+
+    <div class="theorem-box">
+      <div class="def-label">The First Derivative Test</div>
+      <p>Let \(c\) be a critical point of a continuous function \(f\). Examine the sign of \(f'\) on either side of \(c\):</p>
+      <ul>
+        <li>If \(f'\) changes from <strong style="color:#6ecf8a">positive → negative</strong>, then \(f(c)\) is a <strong style="color:#6ecf8a">local maximum</strong>.</li>
+        <li>If \(f'\) changes from <strong style="color:#e07070">negative → positive</strong>, then \(f(c)\) is a <strong style="color:#e07070">local minimum</strong>.</li>
+        <li>If \(f'\) does <strong>not</strong> change sign, then \(f(c)\) is <strong>neither</strong> (a saddle/inflection point).</li>
+      </ul>
+    </div>
+
+    <p class="prose">Why does this work? When \(f' > 0\), the function is increasing. When \(f' < 0\), it is decreasing. A peak occurs when increasing gives way to decreasing; a valley when decreasing gives way to increasing.</p>
+  </div>
+
+  <!-- INTERACTIVE -->
+  <div class="section">
+    <div class="section-title">02 — Interactive Explorer</div>
+    <p class="prose" style="margin-bottom:1rem;">Drag the sliders to change the polynomial \(f(x) = x^3 + ax^2 + bx\). Watch how the curve, the critical points, and the sign chart update in real time.</p>
+
+    <div class="canvas-wrap">
+      <canvas id="graphCanvas" width="820" height="340"></canvas>
+      <div style="padding: 0.5rem 0.5rem 0;">
+        <div class="slider-row">
+          <label>Coefficient \(a\)</label>
+          <input type="range" id="slA" min="-5" max="5" step="0.5" value="-3">
+          <span class="slider-val" id="valA">−3</span>
+        </div>
+        <div class="slider-row">
+          <label>Coefficient \(b\)</label>
+          <input type="range" id="slB" min="-9" max="9" step="0.5" value="0">
+          <span class="slider-val" id="valB">0</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="signChartContainer"></div>
+    <div id="critSummary" style="font-size:0.88rem; color:#c8bfaf; margin-top:0.5rem; line-height:1.7;"></div>
+  </div>
+
+  <!-- WORKED EXAMPLE 1 -->
+  <div class="section">
+    <div class="section-title">03 — Worked Examples</div>
+
+    <div class="worked">
+      <div class="worked-title">Example 1 — Polynomial</div>
+      <div class="step"><div class="step-num">1</div><div class="step-body">Find the critical points of \(f(x) = 2x^3 - 9x^2 + 12x - 4\).<br>Differentiate: \(f'(x) = 6x^2 - 18x + 12\).</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body">Set \(f'(x) = 0\):<br>\(6x^2 - 18x + 12 = 0 \;\Rightarrow\; x^2 - 3x + 2 = 0 \;\Rightarrow\; (x-1)(x-2)=0\)<br>Critical points: \(x = 1\) and \(x = 2\).</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body">Build a sign chart for \(f'(x) = 6(x-1)(x-2)\) by testing one value in each interval:<br>
+        <div class="sign-chart" style="margin-top:0.6rem;">
+          <div class="sign-col header">Interval</div>
+          <div class="sign-col header">\((-\infty,1)\)</div>
+          <div class="sign-col header">\(x=1\)</div>
+          <div class="sign-col header">\((1,2)\)</div>
+          <div class="sign-col header">\(x=2\)</div>
+          <div class="sign-col header">\((2,\infty)\)</div>
+        </div>
+        <div class="sign-chart">
+          <div class="sign-col header">Test value</div>
+          <div class="sign-col" style="color:#8a7f6e">x=0</div>
+          <div class="sign-col zero">—</div>
+          <div class="sign-col" style="color:#8a7f6e">x=1.5</div>
+          <div class="sign-col zero">—</div>
+          <div class="sign-col" style="color:#8a7f6e">x=3</div>
+        </div>
+        <div class="sign-chart">
+          <div class="sign-col header">f'(x)</div>
+          <div class="sign-col pos">+</div>
+          <div class="sign-col zero">0</div>
+          <div class="sign-col neg">−</div>
+          <div class="sign-col zero">0</div>
+          <div class="sign-col pos">+</div>
+        </div>
+        <div class="sign-chart">
+          <div class="sign-col header">f(x)</div>
+          <div class="sign-col inc">↗ increasing</div>
+          <div class="sign-col zero">peak</div>
+          <div class="sign-col dec">↘ decreasing</div>
+          <div class="sign-col zero">valley</div>
+          <div class="sign-col inc">↗ increasing</div>
+        </div>
+      </div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body">Conclude:<br>
+        • At \(x=1\): \(f'\) changes \(+ \to -\), so \(f(1) = 2-9+12-4 = 1\) is a <strong style="color:#6ecf8a">local maximum</strong>.<br>
+        • At \(x=2\): \(f'\) changes \(- \to +\), so \(f(2) = 16-36+24-4 = 0\) is a <strong style="color:#e07070">local minimum</strong>.
+      </div></div>
+    </div>
+
+    <div class="worked">
+      <div class="worked-title">Example 2 — Function with f' undefined</div>
+      <div class="step"><div class="step-num">1</div><div class="step-body">Find and classify critical points of \(f(x) = x^{2/3}\).<br>Differentiate: \(f'(x) = \dfrac{2}{3}x^{-1/3} = \dfrac{2}{3x^{1/3}}\).</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body">Is \(f'(x) = 0\)? Set \(\dfrac{2}{3x^{1/3}}=0\) — there is no solution (the numerator is constant 2).<br>Is \(f'(x)\) undefined? Yes, at \(x = 0\) (division by zero). Since \(0\) is in the domain of \(f\), it is a critical point.</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body">
+        Sign chart for \(f'(x)\) around \(x=0\):<br>
+        <div class="sign-chart" style="margin-top:0.6rem;">
+          <div class="sign-col header">Interval</div>
+          <div class="sign-col header">\((-\infty,0)\)</div>
+          <div class="sign-col header">\(x=0\)</div>
+          <div class="sign-col header">\((0,\infty)\)</div>
+        </div>
+        <div class="sign-chart">
+          <div class="sign-col header">f'(x)</div>
+          <div class="sign-col neg">−</div>
+          <div class="sign-col zero">undef</div>
+          <div class="sign-col pos">+</div>
+        </div>
+        <div class="sign-chart">
+          <div class="sign-col header">f(x)</div>
+          <div class="sign-col dec">↘ decreasing</div>
+          <div class="sign-col zero">cusp</div>
+          <div class="sign-col inc">↗ increasing</div>
+        </div>
+      </div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body">\(f'\) changes \(- \to +\), so \(f(0)=0\) is a <strong style="color:#e07070">local (and global) minimum</strong>. This happens at a <em>cusp</em> — no tangent line exists at \(x=0\), yet it's still an extremum.</div></div>
+    </div>
+  </div>
+
+  <!-- PRACTICE QUIZ -->
+  <div class="section">
+    <div class="section-title">04 — Practice Problems</div>
+    <p class="prose" style="margin-bottom:1.25rem;">Answer each question and press Check. Work through all five to see your score.</p>
+
+    <!-- Q1 -->
+    <div class="quiz-card" id="q1">
+      <div class="quiz-q"><strong>1.</strong> For \(f(x) = x^3 - 3x\), find the larger critical point (enter a number).</div>
+      <div class="quiz-input-row">
+        <input class="quiz-input" id="q1inp" placeholder="x = ?" type="number" step="any">
+        <button class="quiz-btn" onclick="checkQ1()">Check</button>
+        <button class="quiz-btn" onclick="revealQ1()">Show solution</button>
+      </div>
+      <div class="quiz-fb" id="q1fb"></div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="quiz-card" id="q2">
+      <div class="quiz-q"><strong>2.</strong> For \(g(x) = x^3 - 3x\), the First Derivative Test shows that at \(x = 1\):</div>
+      <div class="mc-opts">
+        <label class="mc-opt"><input type="radio" name="q2" value="max"> <span>Local maximum</span></label>
+        <label class="mc-opt"><input type="radio" name="q2" value="min"> <span>Local minimum</span></label>
+        <label class="mc-opt"><input type="radio" name="q2" value="neither"> <span>Neither</span></label>
+      </div>
+      <div class="quiz-input-row">
+        <button class="quiz-btn" onclick="checkQ2()">Check</button>
+        <button class="quiz-btn" onclick="revealQ2()">Show solution</button>
+      </div>
+      <div class="quiz-fb" id="q2fb"></div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="quiz-card" id="q3">
+      <div class="quiz-q"><strong>3.</strong> How many critical points does \(h(x) = x^4 - 4x^3\) have? (Enter the number of critical points.)</div>
+      <div class="quiz-input-row">
+        <input class="quiz-input" id="q3inp" placeholder="count" type="number" step="1">
+        <button class="quiz-btn" onclick="checkQ3()">Check</button>
+        <button class="quiz-btn" onclick="revealQ3()">Show solution</button>
+      </div>
+      <div class="quiz-fb" id="q3fb"></div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="quiz-card" id="q4">
+      <div class="quiz-q"><strong>4.</strong> \(f(x) = x^4 - 4x^3\). Classify the critical point at \(x = 3\):</div>
+      <div class="mc-opts">
+        <label class="mc-opt"><input type="radio" name="q4" value="max"> <span>Local maximum</span></label>
+        <label class="mc-opt"><input type="radio" name="q4" value="min"> <span>Local minimum</span></label>
+        <label class="mc-opt"><input type="radio" name="q4" value="neither"> <span>Neither</span></label>
+      </div>
+      <div class="quiz-input-row">
+        <button class="quiz-btn" onclick="checkQ4()">Check</button>
+        <button class="quiz-btn" onclick="revealQ4()">Show solution</button>
+      </div>
+      <div class="quiz-fb" id="q4fb"></div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="quiz-card" id="q5">
+      <div class="quiz-q"><strong>5.</strong> True or False: Every critical point is a local extremum.</div>
+      <div class="mc-opts">
+        <label class="mc-opt"><input type="radio" name="q5" value="true"> <span>True</span></label>
+        <label class="mc-opt"><input type="radio" name="q5" value="false"> <span>False</span></label>
+      </div>
+      <div class="quiz-input-row">
+        <button class="quiz-btn" onclick="checkQ5()">Check</button>
+        <button class="quiz-btn" onclick="revealQ5()">Show solution</button>
+      </div>
+      <div class="quiz-fb" id="q5fb"></div>
+    </div>
+
+    <div class="score-bar">Total Score<span class="score-val" id="scoreDisplay">0 / 5</span></div>
+  </div>
+
+  <div class="name-line">Built for AP Calculus AB · Critical Points &amp; First Derivative Test</div>
+</div>
+
+<script>
+// ── GRAPH ENGINE ──────────────────────────────────────────────────────────────
+const canvas = document.getElementById('graphCanvas');
+const ctx = canvas.getContext('2d');
+const W = canvas.width, H = canvas.height;
+const XMIN = -4, XMAX = 4, YMIN = -15, YMAX = 15;
+function toX(x){ return (x-XMIN)/(XMAX-XMIN)*W; }
+function toY(y){ return H - (y-YMIN)/(YMAX-YMIN)*H; }
+
+let paramA = -3, paramB = 0;
+
+function f(x){ return x*x*x + paramA*x*x + paramB*x; }
+function fp(x){ return 3*x*x + 2*paramA*x + paramB; }
+
+function critPoints(){
+  const disc = 4*paramA*paramA - 12*paramB;
+  if(disc < 0) return [];
+  if(disc === 0) return [-2*paramA/6];
+  const sq = Math.sqrt(disc);
+  return [(-2*paramA - sq)/6, (-2*paramA + sq)/6].sort((a,b)=>a-b);
+}
+
+function draw(){
+  ctx.clearRect(0,0,W,H);
+
+  // grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+  ctx.lineWidth = 1;
+  for(let x=Math.ceil(XMIN); x<=XMAX; x++){
+    ctx.beginPath(); ctx.moveTo(toX(x),0); ctx.lineTo(toX(x),H); ctx.stroke();
+  }
+  for(let y=Math.ceil(YMIN); y<=YMAX; y+=5){
+    ctx.beginPath(); ctx.moveTo(0,toY(y)); ctx.lineTo(W,toY(y)); ctx.stroke();
+  }
+
+  // axes
+  ctx.strokeStyle = 'rgba(255,255,255,0.2)'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(0,toY(0)); ctx.lineTo(W,toY(0)); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(toX(0),0); ctx.lineTo(toX(0),H); ctx.stroke();
+
+  // axis labels
+  ctx.fillStyle = 'rgba(255,255,255,0.3)'; ctx.font = '11px monospace';
+  for(let x=XMIN+1; x<XMAX; x++){
+    if(x===0) continue;
+    ctx.fillText(x, toX(x)-5, toY(0)+14);
+  }
+
+  // f(x) curve
+  ctx.strokeStyle = '#a8c4e8'; ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  let started = false;
+  for(let px=0; px<W; px++){
+    const x = XMIN + (px/W)*(XMAX-XMIN);
+    const y = f(x);
+    if(y<YMIN||y>YMAX){ started=false; continue; }
+    if(!started){ ctx.moveTo(px, toY(y)); started=true; } else ctx.lineTo(px, toY(y));
+  }
+  ctx.stroke();
+
+  // f'(x) curve
+  ctx.strokeStyle = 'rgba(212,185,106,0.55)'; ctx.lineWidth = 1.5; ctx.setLineDash([6,4]);
+  ctx.beginPath(); started=false;
+  for(let px=0; px<W; px++){
+    const x = XMIN + (px/W)*(XMAX-XMIN);
+    const y = fp(x);
+    if(y<YMIN||y>YMAX){ started=false; continue; }
+    if(!started){ ctx.moveTo(px, toY(y)); started=true; } else ctx.lineTo(px, toY(y));
+  }
+  ctx.stroke(); ctx.setLineDash([]);
+
+  // critical points
+  const cps = critPoints();
+  cps.forEach(cx => {
+    const cy = f(cx);
+    if(cy<YMIN||cy>YMAX) return;
+    const dLeft = fp(cx-0.2), dRight = fp(cx+0.2);
+    let color, label;
+    if(dLeft>0 && dRight<0){ color='#6ecf8a'; label='max'; }
+    else if(dLeft<0 && dRight>0){ color='#e07070'; label='min'; }
+    else{ color='#d4b96a'; label='neither'; }
+
+    ctx.strokeStyle=color; ctx.lineWidth=1; ctx.setLineDash([3,3]);
+    ctx.beginPath(); ctx.moveTo(toX(cx),0); ctx.lineTo(toX(cx),toY(cy)); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0,toY(cy)); ctx.lineTo(toX(cx),toY(cy)); ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.fillStyle=color;
+    ctx.beginPath(); ctx.arc(toX(cx),toY(cy),6,0,2*Math.PI); ctx.fill();
+    ctx.fillStyle='#0a0a0f';
+    ctx.beginPath(); ctx.arc(toX(cx),toY(cy),3,0,2*Math.PI); ctx.fill();
+
+    ctx.fillStyle=color; ctx.font='bold 12px monospace';
+    ctx.fillText(`(${cx.toFixed(2)}, ${cy.toFixed(2)}) ${label}`, toX(cx)+8, toY(cy)-8);
+  });
+
+  // legend
+  ctx.font='12px monospace';
+  ctx.fillStyle='#a8c4e8'; ctx.fillRect(16,12,28,3); ctx.fillText('f(x)',50,17);
+  ctx.fillStyle='rgba(212,185,106,0.7)'; ctx.fillRect(16,26,28,2); ctx.fillText("f'(x)",50,31);
+
+  updateSignChart(cps);
+  updateSummary(cps);
+}
+
+function updateSignChart(cps){
+  const cont = document.getElementById('signChartContainer');
+  if(cps.length===0){
+    cont.innerHTML='<p style="font-size:0.85rem;color:#7c6f5e;margin:0.5rem 0;">No real critical points for these parameters.</p>';
+    return;
+  }
+  const intervals = [];
+  const pts = cps.map(c=>c.toFixed(2));
+  // build intervals
+  const xs = [-999,...cps,999];
+  for(let i=0;i<xs.length-1;i++){
+    const mid = (xs[i]+xs[i+1])/2;
+    const sign = fp(mid)>0 ? '+' : '−';
+    const trend = fp(mid)>0 ? '↗' : '↘';
+    intervals.push({mid, sign, trend});
+  }
+
+  let html = '<div style="margin:0.5rem 0 0.25rem;font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:#7c6f5e;">Sign chart of f\'(x)</div>';
+  html += '<div class="sign-chart">';
+  html += '<div class="sign-col header">Region</div>';
+  intervals.forEach((iv,i)=>{
+    if(i>0) html+=`<div class="sign-col header">x=${pts[i-1]}</div>`;
+    let iLabel;
+    if(i===0) iLabel = `(−∞,${pts[0]})`;
+    else if(i===intervals.length-1) iLabel=`(${pts[pts.length-1]},∞)`;
+    else iLabel=`(${pts[i-1]},${pts[i]})`;
+    html+=`<div class="sign-col header">${iLabel}</div>`;
+  });
+  html+='</div>';
+
+  html+='<div class="sign-chart"><div class="sign-col header">f\'(x)</div>';
+  intervals.forEach((iv,i)=>{
+    if(i>0) html+=`<div class="sign-col zero">0</div>`;
+    const cls = iv.sign==='+' ? 'pos' : 'neg';
+    html+=`<div class="sign-col ${cls}">${iv.sign}</div>`;
+  });
+  html+='</div>';
+
+  html+='<div class="sign-chart"><div class="sign-col header">f(x)</div>';
+  intervals.forEach((iv,i)=>{
+    if(i>0){
+      const cx = cps[i-1];
+      const dl=fp(cx-0.2), dr=fp(cx+0.2);
+      let lbl,color;
+      if(dl>0&&dr<0){lbl='local max';color='#6ecf8a';}
+      else if(dl<0&&dr>0){lbl='local min';color='#e07070';}
+      else{lbl='neither';color='#d4b96a';}
+      html+=`<div class="sign-col zero" style="color:${color};font-size:0.72rem;">${lbl}</div>`;
+    }
+    const cls2 = iv.sign==='+' ? 'inc' : 'dec';
+    html+=`<div class="sign-col ${cls2}">${iv.trend} ${iv.sign==='+'?'incr':'decr'}</div>`;
+  });
+  html+='</div>';
+  cont.innerHTML=html;
+}
+
+function updateSummary(cps){
+  const el = document.getElementById('critSummary');
+  if(cps.length===0){ el.innerHTML=''; return; }
+  let html = `<strong style="color:#e0d8c8">f(x) = x³ + ${paramA}x² + ${paramB}x, f'(x) = 3x² + ${2*paramA}x + ${paramB}</strong><br>`;
+  html += 'Critical point' + (cps.length>1?'s':'') + ': ';
+  html += cps.map(c=>`<span style="color:#d4b96a">x = ${c.toFixed(3)}</span>`).join(', ');
+  el.innerHTML=html;
+}
+
+// Sliders
+function fmt(v){ return v<0?'−'+Math.abs(v):String(v); }
+document.getElementById('slA').addEventListener('input',e=>{
+  paramA=parseFloat(e.target.value);
+  document.getElementById('valA').textContent=fmt(paramA);
+  draw();
+});
+document.getElementById('slB').addEventListener('input',e=>{
+  paramB=parseFloat(e.target.value);
+  document.getElementById('valB').textContent=fmt(paramB);
+  draw();
+});
+draw();
+
+// ── QUIZ LOGIC ────────────────────────────────────────────────────────────────
+let score = 0;
+const answered = {};
+
+function setFb(id, msg, correct){
+  const el = document.getElementById(id+'fb');
+  el.className = 'quiz-fb ' + (correct?'correct':'wrong');
+  el.innerHTML = (correct ? '✓ ' : '✗ ') + msg;
+  if(!answered[id]){
+    answered[id]=true;
+    if(correct) score++;
+    document.getElementById('scoreDisplay').textContent = score + ' / 5';
+  }
+}
+
+function checkQ1(){
+  const v = parseFloat(document.getElementById('q1inp').value);
+  if(Math.abs(v-1)<0.01) setFb('q1','Correct! f\'(x)=3x²−3=0 → x=±1; the larger is x=1.',true);
+  else setFb('q1','Not quite. f\'(x)=3x²−3; set equal to 0 to get x=±1. The larger is x=1.',false);
+}
+function revealQ1(){
+  document.getElementById('q1fb').className='quiz-fb wrong';
+  document.getElementById('q1fb').innerHTML='Solution: f\'(x)=3x²−3=0 → x²=1 → x=±1. The larger critical point is x = 1.';
+}
+
+function checkQ2(){
+  const v = document.querySelector('input[name=q2]:checked')?.value;
+  if(!v){setFb('q2','Please select an option.',false);return;}
+  if(v==='min') setFb('q2','Correct! f\'(x)=3x²−3=3(x−1)(x+1). At x=1, f\' changes − → +, so local minimum.',true);
+  else setFb('q2','Not quite. Check the sign of f\'(x)=3(x−1)(x+1) just left and right of x=1.',false);
+}
+function revealQ2(){
+  document.getElementById('q2fb').className='quiz-fb wrong';
+  document.getElementById('q2fb').innerHTML='f\'(x)=3(x−1)(x+1). For x slightly less than 1 (e.g. x=0.9): f\'(0.9)=3(−0.1)(1.9)<0. For x=1.1: f\'(1.1)=3(0.1)(2.1)>0. Sign changes − → +, so x=1 is a local minimum.';
+}
+
+function checkQ3(){
+  const v = parseInt(document.getElementById('q3inp').value);
+  if(v===2) setFb('q3','Correct! h\'(x)=4x³−12x²=4x²(x−3)=0 → x=0 and x=3.',true);
+  else setFb('q3','Not quite. Differentiate h\'(x)=4x³−12x²=4x²(x−3) and count the zeros.',false);
+}
+function revealQ3(){
+  document.getElementById('q3fb').className='quiz-fb wrong';
+  document.getElementById('q3fb').innerHTML='h\'(x)=4x³−12x²=4x²(x−3). Setting to 0: x=0 or x=3. Two critical points.';
+}
+
+function checkQ4(){
+  const v = document.querySelector('input[name=q4]:checked')?.value;
+  if(!v){setFb('q4','Please select an option.',false);return;}
+  if(v==='min') setFb('q4','Correct! h\'(x)=4x²(x−3). For x slightly less than 3, h\'<0; for x>3, h\'>0. Sign changes − → +: local minimum.',true);
+  else setFb('q4','Not quite. Test h\'(2.9) and h\'(3.1). What sign changes do you see?',false);
+}
+function revealQ4(){
+  document.getElementById('q4fb').className='quiz-fb wrong';
+  document.getElementById('q4fb').innerHTML='h\'(x)=4x²(x−3). At x=2.9: 4(2.9)²(−0.1)<0. At x=3.1: 4(3.1)²(0.1)>0. Sign − → + means local minimum at x=3.';
+}
+
+function checkQ5(){
+  const v = document.querySelector('input[name=q5]:checked')?.value;
+  if(!v){setFb('q5','Please select an option.',false);return;}
+  if(v==='false') setFb('q5','Correct! If f\' does not change sign at a critical point, it is neither a max nor a min (e.g. f(x)=x³ at x=0).',true);
+  else setFb('q5','False. A critical point where f\' does not change sign (e.g. x=0 for f(x)=x³) is neither a local max nor min.',false);
+}
+function revealQ5(){
+  document.getElementById('q5fb').className='quiz-fb wrong';
+  document.getElementById('q5fb').innerHTML='False. Counterexample: f(x)=x³ has f\'(x)=3x², so f\'(0)=0. But f\' stays non-negative on both sides of 0 (it\'s always ≥0), so f\' doesn\'t change sign. x=0 is a critical point but not a local extremum.';
+}
+
+// MathJax rerender after DOM is stable
+window.addEventListener('load', ()=>{
+  if(window.MathJax) MathJax.typesetPromise();
+});
+</script>
+</body>
+</html>
